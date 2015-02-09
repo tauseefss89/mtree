@@ -57,13 +57,24 @@ end
 
 # Now check for the versions
 projects.each do |id, desc|
+	diffs = [] # differences
 	desc['dependencies'].each do |dId, dVersion|
 		# If project with this id in the hash
 		unless projects[dId].nil?
 			if dVersion != projects[dId]['version']
-				puts 'Project ' + id.yellow + ' ask for ' + dId + ':' + dVersion.blue + ' but ' + dId.magenta + ' has version ' + projects[dId]['version'].green
-				# puts dVersion + ' ' + projects[dId]['version']
+				diffs.push({
+					'id' => dId,
+					'askedV' => dVersion,
+					'currentV' => projects[dId]['version']
+				})
 			end
 		end
+	end
+	unless diffs.empty?
+		puts id.yellow
+		diffs.each do |diff|
+			puts 'ask ' + diff['id'].magenta + ':' + diff['askedV'].blue + ' current: ' + diff['currentV'].green
+		end
+		puts
 	end
 end
